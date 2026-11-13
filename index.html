@@ -3,77 +3,184 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Daily Horoscope · Pisces</title>
+<title>Daily Horoscope &amp; Bazi</title>
 <style>
-  :root { color-scheme: dark; }
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f5f0ff;
+    --card: #ffffff;
+    --border: #e3d8fa;
+    --accent: #8e6fd1;
+    --accent-dark: #5b3fa0;
+    --text: #2f2545;
+    --muted: #7d7396;
+  }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     min-height: 100vh;
-    display: grid;
-    place-items: center;
-    padding: 24px;
+    padding: 32px 20px;
     font-family: Georgia, "Times New Roman", serif;
-    color: #ece9f7;
-    background: radial-gradient(ellipse at top, #2b2358 0%, #12102b 60%, #0a0919 100%);
+    color: var(--text);
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+  }
+  header { text-align: center; margin-bottom: 28px; }
+  header h1 { margin: 0; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; color: var(--accent-dark); }
+  header p { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+  .grid {
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
   }
   .card {
-    width: 100%;
-    max-width: 520px;
-    padding: 36px 32px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    padding: 30px 28px;
+    border-radius: 18px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 30px rgba(142, 111, 209, 0.12);
     text-align: center;
   }
-  .symbol { font-size: 56px; line-height: 1; margin-bottom: 8px; }
-  h1 { margin: 0; font-size: 28px; font-weight: 600; letter-spacing: 0.04em; }
-  .sub { margin: 6px 0 0; font-size: 14px; color: #a9a4c9; }
-  .date { margin: 24px 0 12px; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: #c9b8ff; }
-  #reading { font-size: 19px; line-height: 1.65; min-height: 5em; }
-  .error { color: #ffb4b4; font-size: 16px; }
-  footer { margin-top: 28px; font-size: 12px; color: #8c88ad; }
-  footer a { color: #c9b8ff; }
+  .symbol { font-size: 48px; line-height: 1; margin-bottom: 6px; color: var(--accent); }
+  h2 { margin: 0; font-size: 22px; font-weight: 600; color: var(--accent-dark); }
+  .sub { margin: 6px 0 0; font-size: 13px; color: var(--muted); }
+  .date { margin: 20px 0 10px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .reading { font-size: 17px; line-height: 1.65; min-height: 5em; text-align: left; }
+  .error { color: #b3475f; }
+  .pillars { display: flex; justify-content: center; gap: 10px; margin: 18px 0 4px; }
+  .pillar {
+    flex: 1; max-width: 80px; padding: 10px 4px;
+    border-radius: 12px; background: var(--bg-soft); border: 1px solid var(--border);
+  }
+  .pillar .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .pillar .zh { font-size: 26px; color: var(--accent-dark); margin-top: 4px; }
+  .pillar.today { background: var(--accent); border-color: var(--accent); }
+  .pillar.today .label, .pillar.today .zh { color: #fff; }
+  .god { display: inline-block; margin-top: 4px; padding: 3px 12px; border-radius: 999px; background: var(--bg-soft); border: 1px solid var(--border); font-size: 13px; color: var(--accent-dark); }
+  .note { margin-top: 14px; font-size: 12px; color: var(--muted); text-align: left; }
+  footer { margin: 28px 0 0; text-align: center; font-size: 12px; color: var(--muted); }
+  footer a { color: var(--accent); }
 </style>
 </head>
 <body>
-  <main class="card">
-    <div class="symbol" aria-hidden="true">♓</div>
-    <h1>Pisces</h1>
-    <p class="sub">Born 9 March 1989</p>
-    <div class="date" id="date">Loading…</div>
-    <p id="reading" aria-live="polite">Consulting the stars…</p>
-    <footer>
-      <a href="https://freehoroscopeapi.com" target="_blank" rel="noopener">Powered by FreeHoroscopeAPI</a>
-    </footer>
-  </main>
+  <header>
+    <h1>Your Day, Today</h1>
+    <p id="today">Born 9 March 1989</p>
+  </header>
+
+  <div class="grid">
+    <!-- Western horoscope -->
+    <section class="card">
+      <div class="symbol" aria-hidden="true">♓</div>
+      <h2>Pisces</h2>
+      <p class="sub">Western daily horoscope</p>
+      <div class="date" id="h-date">Loading…</div>
+      <p class="reading" id="h-reading" aria-live="polite">Consulting the stars…</p>
+    </section>
+
+    <!-- Bazi -->
+    <section class="card">
+      <div class="symbol" aria-hidden="true">八字</div>
+      <h2>Bazi</h2>
+      <p class="sub">Day Master 戊 · Yang Earth</p>
+      <div class="date" id="b-date">Loading…</div>
+      <div class="pillars" aria-label="Pillars">
+        <div class="pillar"><div class="label">Year</div><div class="zh">己巳</div></div>
+        <div class="pillar"><div class="label">Month</div><div class="zh">丁卯</div></div>
+        <div class="pillar"><div class="label">Day</div><div class="zh">戊辰</div></div>
+        <div class="pillar today"><div class="label">Today</div><div class="zh" id="b-pillar">—</div></div>
+      </div>
+      <div class="god" id="b-god">—</div>
+      <p class="reading" id="b-reading"></p>
+      <p class="note">Hour pillar omitted (birth time not provided). Reading is based on how today's stem relates to your Day Master.</p>
+    </section>
+  </div>
+
+  <footer>
+    <a href="https://freehoroscopeapi.com" target="_blank" rel="noopener">Powered by FreeHoroscopeAPI</a>
+  </footer>
 
 <script>
-  // Sign is derived from the birth date: 9 March = Pisces (19 Feb – 20 Mar).
-  const SIGN = "pisces";
-  const API = "https://freehoroscopeapi.com/api/v1/get-horoscope/daily?sign=" + SIGN;
+  /* ---------- Western horoscope (FreeHoroscopeAPI) ---------- */
+  // 9 March = Pisces (19 Feb – 20 Mar)
+  const API = "https://freehoroscopeapi.com/api/v1/get-horoscope/daily?sign=pisces";
+  const hDate = document.getElementById("h-date");
+  const hReading = document.getElementById("h-reading");
 
-  const dateEl = document.getElementById("date");
-  const readingEl = document.getElementById("reading");
+  function fmtDate(d) {
+    return d.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  }
 
-  async function load() {
+  async function loadHoroscope() {
     try {
       const res = await fetch(API);
       if (!res.ok) throw new Error("HTTP " + res.status);
       const { data } = await res.json();
       const d = new Date(data.date + "T00:00:00");
-      dateEl.textContent = isNaN(d)
-        ? data.date
-        : d.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-      readingEl.textContent = data.horoscope;
-    } catch (err) {
-      dateEl.textContent = "Today";
-      readingEl.textContent = "The stars are out of reach right now. Please try again shortly.";
-      readingEl.classList.add("error");
+      hDate.textContent = isNaN(d) ? data.date : fmtDate(d);
+      hReading.textContent = data.horoscope;
+    } catch (e) {
+      hDate.textContent = "Today";
+      hReading.textContent = "The stars are out of reach right now. Please try again shortly.";
+      hReading.classList.add("error");
     }
   }
-  load();
+
+  /* ---------- Bazi (computed locally) ---------- */
+  const STEMS = "甲乙丙丁戊己庚辛壬癸";
+  const BRANCHES = "子丑寅卯辰巳午未申酉戌亥";
+  // Element index: 0 wood, 1 fire, 2 earth, 3 metal, 4 water (produces in this order, cycling)
+  const elementOf = i => Math.floor(i / 2);
+  const ELEMENT_NAMES = ["Wood", "Fire", "Earth", "Metal", "Water"];
+
+  // Day pillar: 2000-01-01 was 戊午, index 54 in the 60-day cycle.
+  function dayPillar(date) {
+    const days = Math.round((Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(2000, 0, 1)) / 864e5);
+    const n = (((54 + days) % 60) + 60) % 60;
+    return { stem: n % 10, branch: n % 12 };
+  }
+
+  // Ten Gods relation of a stem to the Day Master.
+  function tenGod(dm, other) {
+    const same = dm % 2 === other % 2; // same polarity
+    const diff = (elementOf(other) - elementOf(dm) + 5) % 5;
+    // 0 same element, 1 I produce, 2 I control, 3 controls me, 4 produces me
+    const names = [
+      ["Friend (比肩)", "Rob Wealth (劫财)"],
+      ["Eating God (食神)", "Hurting Officer (伤官)"],
+      ["Indirect Wealth (偏财)", "Direct Wealth (正财)"],
+      ["Seven Killings (七杀)", "Direct Officer (正官)"],
+      ["Indirect Resource (偏印)", "Direct Resource (正印)"]
+    ];
+    return { group: diff, name: names[diff][same ? 0 : 1] };
+  }
+
+  const READINGS = [
+    "A day of peers and mirrors. You'll feel more self-assured, and others around you may be competing or collaborating on similar goals. Share the load instead of going it alone, and keep an eye on spending.",
+    "Your expressive energy is high today. It's a good day to create, speak up, teach or pitch an idea. Say what you mean, but choose your tone, as sharp words land harder than you intend.",
+    "Opportunities connected to money, practical results or deals are in focus. Stay hands-on and attentive to detail. Gains come from steady effort, not from rushing.",
+    "Pressure or responsibility may press on you today. Rules, deadlines and authority figures set the tone. Stay organised and composed, and treat it as a day to prove reliability rather than to push back.",
+    "Support is available. Learning, advice and rest all work in your favour, and a mentor or a quiet moment can recharge you. Good day to study, plan and take in rather than push out."
+  ];
+
+  function loadBazi() {
+    const now = new Date();
+    const dm = STEMS.indexOf("戊");
+    const p = dayPillar(now);
+    const god = tenGod(dm, p.stem);
+    const pillar = STEMS[p.stem] + BRANCHES[p.branch];
+
+    document.getElementById("b-date").textContent = fmtDate(now);
+    document.getElementById("b-pillar").textContent = pillar;
+    document.getElementById("b-god").textContent =
+      STEMS[p.stem] + " " + ELEMENT_NAMES[elementOf(p.stem)] + " · " + god.name;
+    document.getElementById("b-reading").textContent = READINGS[god.group];
+  }
+
+  document.getElementById("today").textContent = "Born 9 March 1989";
+  loadHoroscope();
+  loadBazi();
 </script>
 </body>
 </html>
