@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daily Horoscope · Pisces</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    font-family: Georgia, "Times New Roman", serif;
+    color: #ece9f7;
+    background: radial-gradient(ellipse at top, #2b2358 0%, #12102b 60%, #0a0919 100%);
+  }
+  .card {
+    width: 100%;
+    max-width: 520px;
+    padding: 36px 32px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    text-align: center;
+  }
+  .symbol { font-size: 56px; line-height: 1; margin-bottom: 8px; }
+  h1 { margin: 0; font-size: 28px; font-weight: 600; letter-spacing: 0.04em; }
+  .sub { margin: 6px 0 0; font-size: 14px; color: #a9a4c9; }
+  .date { margin: 24px 0 12px; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: #c9b8ff; }
+  #reading { font-size: 19px; line-height: 1.65; min-height: 5em; }
+  .error { color: #ffb4b4; font-size: 16px; }
+  footer { margin-top: 28px; font-size: 12px; color: #8c88ad; }
+  footer a { color: #c9b8ff; }
+</style>
+</head>
+<body>
+  <main class="card">
+    <div class="symbol" aria-hidden="true">♓</div>
+    <h1>Pisces</h1>
+    <p class="sub">Born 9 March 1989</p>
+    <div class="date" id="date">Loading…</div>
+    <p id="reading" aria-live="polite">Consulting the stars…</p>
+    <footer>
+      <a href="https://freehoroscopeapi.com" target="_blank" rel="noopener">Powered by FreeHoroscopeAPI</a>
+    </footer>
+  </main>
+
+<script>
+  // Sign is derived from the birth date: 9 March = Pisces (19 Feb – 20 Mar).
+  const SIGN = "pisces";
+  const API = "https://freehoroscopeapi.com/api/v1/get-horoscope/daily?sign=" + SIGN;
+
+  const dateEl = document.getElementById("date");
+  const readingEl = document.getElementById("reading");
+
+  async function load() {
+    try {
+      const res = await fetch(API);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const { data } = await res.json();
+      const d = new Date(data.date + "T00:00:00");
+      dateEl.textContent = isNaN(d)
+        ? data.date
+        : d.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+      readingEl.textContent = data.horoscope;
+    } catch (err) {
+      dateEl.textContent = "Today";
+      readingEl.textContent = "The stars are out of reach right now. Please try again shortly.";
+      readingEl.classList.add("error");
+    }
+  }
+  load();
+</script>
+</body>
+</html>
